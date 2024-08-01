@@ -1,15 +1,15 @@
 [submodule "capture-the-ether-foundry"]
     path = capture-the-ether-foundry
-    url = <repository-url>
+    url = https://github.com/SRL132/capture-the-ether-foundry
 
 [submodule "damn-vulnerable-defi"]
     path = damn-vulnerable-defi
-    url = <repository-url>
+    url = https://github.com/SRL132/damn-vulnerable-defi
 
 [submodule "solidity-riddles"]
     path = solidity-riddles
-    url = <repository-url>
+    url = https://github.com/SRL132/solidity-riddles
 
 [submodule "ethernaut-foundry-boilerplate"]
     path = ethernaut-foundry-boilerplate
-    url = <repository-url>
+    url = https://github.com/SRL132/ethernaut-foundry-boilerplate
