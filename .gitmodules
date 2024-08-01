@@ -1,0 +1,11 @@
+[submodule "capture-the-ether-foundry"]
+    path = capture-the-ether-foundry
+    url = <repository-url>
+
+[submodule "damn-vulnerable-defi"]
+    path = damn-vulnerable-defi
+    url = <repository-url>
+
+[submodule "solidity-riddles"]
+    path = solidity-riddles
+    url = <repository-url>
