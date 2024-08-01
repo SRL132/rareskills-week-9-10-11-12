@@ -9,3 +9,7 @@
 [submodule "solidity-riddles"]
     path = solidity-riddles
     url = <repository-url>
+
+[submodule "ethernaut-foundry-boilerplate"]
+    path = ethernaut-foundry-boilerplate
+    url = <repository-url>
