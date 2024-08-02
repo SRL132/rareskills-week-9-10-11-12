@@ -24,11 +24,6 @@ describe(NAME, function () {
             const AttackerFactory = await ethers.getContractFactory("Overmint1_ERC1155_Attacker");
             const attackerContract = await AttackerFactory.connect(attackerWallet).deploy(victimContract.address);
             await attackerContract.connect(attackerWallet).attack();
-            // now transfer the erc1155 tokens to the attacker wallet
-            console.log("attackerContractBalance", await victimContract.balanceOf(attackerContract.address, 0));
-            await victimContract
-                .connect(attackerWallet)
-                .safeTransferFrom(attackerContract.address, victimContract.address, 0, 5, "0x");
         });
 
         after(async function () {

