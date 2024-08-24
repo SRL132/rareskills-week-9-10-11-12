@@ -3,8 +3,8 @@ pragma solidity ^0.8.0;
 
 import "solady/src/utils/FixedPointMathLib.sol";
 import "solady/src/utils/SafeTransferLib.sol";
-import { RewardToken } from "./RewardToken.sol";
-import { AccountingToken } from "./AccountingToken.sol";
+import {RewardToken} from "./RewardToken.sol";
+import {AccountingToken} from "./AccountingToken.sol";
 
 /**
  * @title TheRewarderPool
@@ -15,7 +15,7 @@ contract TheRewarderPool {
 
     // Minimum duration of each round of rewards in seconds
     uint256 private constant REWARDS_ROUND_MIN_DURATION = 5 days;
-    
+
     uint256 public constant REWARDS = 100 ether;
 
     // Token deposited into the pool by users
@@ -74,9 +74,14 @@ contract TheRewarderPool {
         if (isNewRewardsRound()) {
             _recordSnapshot();
         }
-
-        uint256 totalDeposits = accountingToken.totalSupplyAt(lastSnapshotIdForRewards);
-        uint256 amountDeposited = accountingToken.balanceOfAt(msg.sender, lastSnapshotIdForRewards);
+        //@audit check if the snapshot is in line with rewarderPool at all stages
+        uint256 totalDeposits = accountingToken.totalSupplyAt(
+            lastSnapshotIdForRewards
+        );
+        uint256 amountDeposited = accountingToken.balanceOfAt(
+            msg.sender,
+            lastSnapshotIdForRewards
+        );
 
         if (amountDeposited > 0 && totalDeposits > 0) {
             rewards = amountDeposited.mulDiv(REWARDS, totalDeposits);
@@ -96,13 +101,15 @@ contract TheRewarderPool {
     }
 
     function _hasRetrievedReward(address account) private view returns (bool) {
-        return (
-            lastRewardTimestamps[account] >= lastRecordedSnapshotTimestamp
-                && lastRewardTimestamps[account] <= lastRecordedSnapshotTimestamp + REWARDS_ROUND_MIN_DURATION
-        );
+        return (lastRewardTimestamps[account] >=
+            lastRecordedSnapshotTimestamp &&
+            lastRewardTimestamps[account] <=
+            lastRecordedSnapshotTimestamp + REWARDS_ROUND_MIN_DURATION);
     }
 
     function isNewRewardsRound() public view returns (bool) {
-        return block.timestamp >= lastRecordedSnapshotTimestamp + REWARDS_ROUND_MIN_DURATION;
+        return
+            block.timestamp >=
+            lastRecordedSnapshotTimestamp + REWARDS_ROUND_MIN_DURATION;
     }
 }
