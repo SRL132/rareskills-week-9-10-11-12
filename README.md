@@ -1,4 +1,4 @@
-# rareskills-week-9-10-11-12
+# Rareskills weeks 9-10 and 11-12
 
 Week 9-10:
 
