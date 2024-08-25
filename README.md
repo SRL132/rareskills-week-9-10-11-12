@@ -21,6 +21,14 @@ Week 9-10:
 
 Week 10-11:
 
+-  Damn Vulnerable DeFi #2 Naive Receiver
+-  Damn Vulnerable Defi #3 Truster
+-  Damn Vulnerable DeFi #5
+-  Damn Vulnerable DeFi #6
+
+-  Ethernaut #13 Gatekeeper 1
+-  Ethernaut #23 Dex2
+
 -  RareSkills Riddles: Forwarder
 -  RareSkills Riddles: Overmint3
 -  RareSkills Riddles: Democracy
@@ -29,10 +37,4 @@ Week 10-11:
 -  RareSkills Riddles: RewardToken
 -  RareSkills Riddles: Read-only reentrancy
 
--  Ethernaut #13 Gatekeeper 1
--  Ethernaut #23 Dex2
 
--  Damn Vulnerable DeFi #2 Naive Receiver
--  Damn Vulnerable Defi #3 Truster
--  Damn Vulnerable DeFi #5
--  Damn Vulnerable DeFi #6
