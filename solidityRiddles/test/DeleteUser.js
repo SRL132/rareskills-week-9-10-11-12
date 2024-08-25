@@ -23,12 +23,9 @@ describe(NAME, function () {
         });
 
         it("conduct your attack here", async function () {
-            //TODO: try fuzzing
             const deleteUserAttackerFactory = await ethers.getContractFactory("DeleteUserAttacker");
             const deleteUserAttacker = await deleteUserAttackerFactory.deploy(victimContract.address);
             const deleteUserAttackerWithSignature = deleteUserAttacker.connect(attackerWallet);
-
-            const victimContractWithSignature = victimContract.connect(attackerWallet);
 
             await deleteUserAttackerWithSignature.attack({
                 value: ethers.utils.parseEther("1"),
