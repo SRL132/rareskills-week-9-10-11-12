@@ -10,7 +10,10 @@ contract Preservation {
     // Sets the function signature for delegatecall
     bytes4 constant setTimeSignature = bytes4(keccak256("setTime(uint256)"));
 
-    constructor(address _timeZone1LibraryAddress, address _timeZone2LibraryAddress) {
+    constructor(
+        address _timeZone1LibraryAddress,
+        address _timeZone2LibraryAddress
+    ) {
         timeZone1Library = _timeZone1LibraryAddress;
         timeZone2Library = _timeZone2LibraryAddress;
         owner = msg.sender;
@@ -18,12 +21,16 @@ contract Preservation {
 
     // set the time for timezone 1
     function setFirstTime(uint256 _timeStamp) public {
-        timeZone1Library.delegatecall(abi.encodePacked(setTimeSignature, _timeStamp));
+        timeZone1Library.delegatecall(
+            abi.encodePacked(setTimeSignature, _timeStamp)
+        );
     }
 
     // set the time for timezone 2
     function setSecondTime(uint256 _timeStamp) public {
-        timeZone2Library.delegatecall(abi.encodePacked(setTimeSignature, _timeStamp));
+        timeZone2Library.delegatecall(
+            abi.encodePacked(setTimeSignature, _timeStamp)
+        );
     }
 }
 
@@ -34,5 +41,23 @@ contract LibraryContract {
 
     function setTime(uint256 _time) public {
         storedTime = _time;
+    }
+}
+
+contract PreservationAttacker {
+    address public timeZone1Library;
+    address public timeZone2Library;
+    address public owner;
+    uint256 storedTime;
+    bytes4 constant setTimeSignature = bytes4(keccak256("setTime(uint256)"));
+
+    constructor() {
+        timeZone1Library = address(0x1);
+        timeZone2Library = address(0x2);
+        owner = msg.sender;
+    }
+
+    function setTime(uint256 _time) public {
+        owner = owner;
     }
 }
